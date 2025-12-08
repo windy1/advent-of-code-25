@@ -1,1 +1,0 @@
-/Users/wzs02/code/atrius/advent-of-code-25/target/debug/d1-secret-entrance: /Users/wzs02/code/atrius/advent-of-code-25/d1-secret-entrance/input.txt /Users/wzs02/code/atrius/advent-of-code-25/d1-secret-entrance/src/main.rs
