@@ -5,23 +5,39 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Debug executable 'd1-secret-entrance'",
+      "name": "Debug executable 'd1-p2-secret-entrance'",
       "type": "lldb",
       "request": "launch",
       "env": {
         "RUST_BACKTRACE": "full"
       },
       "cargo": {
-        "args": ["run", "--bin=d1-secret-entrance"]
+        "args": [
+          "run",
+          "--bin=d1-p2-secret-entrance",
+          "--package=d1-p2-secret-entrance"
+        ]
       },
       "args": []
     },
     {
-      "name": "Debug unit tests in executable 'd1-secret-entrance'",
+      "name": "Debug executable 'd1-p1-secret-entrance'",
+      "type": "lldb",
+      "request": "launch",
+      "env": {
+        "RUST_BACKTRACE": "full"
+      },
+      "cargo": {
+        "args": ["run", "--bin=d1-p1-secret-entrance"]
+      },
+      "args": []
+    },
+    {
+      "name": "Debug unit tests in executable 'd1-p1-secret-entrance'",
       "type": "lldb",
       "request": "launch",
       "cargo": {
-        "args": ["test", "--bin=d1-secret-entrance"]
+        "args": ["test", "--bin=d1-p1-secret-entrance"]
       }
     }
   ]
