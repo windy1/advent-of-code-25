@@ -33,17 +33,13 @@ fn main() {
     let mut password = 0;
 
     for rotation in &rotations {
-        let delta = if rotation.right {
-            rotation.distance
-        } else {
-            -rotation.distance
-        };
+        let distance = rotation.distance;
+        let delta = if rotation.right { distance } else { -distance };
 
         let new_position =
             ((position + delta) % (MAX_POSITION + 1) + (MAX_POSITION + 1)) % (MAX_POSITION + 1);
 
         let zero_passes = if rotation.right {
-            let distance = rotation.distance;
             let zero_distance = (MAX_POSITION + 1) - position;
 
             if distance >= zero_distance {
@@ -52,7 +48,6 @@ fn main() {
                 0
             }
         } else {
-            let distance = rotation.distance;
             let zero_distance = position;
 
             if distance >= zero_distance && zero_distance > 0 {
