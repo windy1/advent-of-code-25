@@ -96,6 +96,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "d3-p2-lobby"
+version = "0.1.0"
+dependencies = [
+ "env_logger",
+ "log",
+]
+
+[[package]]
 name = "env_filter"
 version = "0.1.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
