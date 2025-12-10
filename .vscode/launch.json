@@ -5,6 +5,19 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Debug executable 'd2-p2-gift-shop'",
+      "type": "lldb",
+      "request": "launch",
+      "env": {
+        "RUST_BACKTRACE": "full",
+        "RUST_LOG": "debug"
+      },
+      "cargo": {
+        "args": ["run", "--bin=d2-p2-gift-shop", "--package=d2-p2-gift-shop"]
+      },
+      "args": []
+    },
+    {
       "name": "Debug executable 'd2-p1-gift-shop'",
       "type": "lldb",
       "request": "launch",
