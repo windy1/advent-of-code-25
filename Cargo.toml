@@ -1,3 +1,3 @@
 [workspace]
 resolver = "3"
-members = ["d1-p1-secret-entrance", "d1-p2-secret-entrance", "d2-p1-gift-shop", "d2-p2-gift-shop"]
+members = ["d1-p1-secret-entrance", "d1-p2-secret-entrance", "d2-p1-gift-shop", "d2-p2-gift-shop", "d3-p1-lobby"]

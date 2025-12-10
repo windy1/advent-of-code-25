@@ -26,7 +26,7 @@ fn main() {
 
 fn parse_range(value: &str) -> Range {
     let (start, end) = value.split_once('-').expect(INVALID_FORMAT);
-    let start = start.parse::<u64>().expect(INVALID_FORMAT);
+    let start = start.parse::<u64>().expect(INVALID_FORMAT);    
     let end = end.parse::<u64>().expect(INVALID_FORMAT);
     (start, end)
 }
