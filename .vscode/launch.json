@@ -5,6 +5,19 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Debug executable 'd5-p1-cafeteria'",
+      "type": "lldb",
+      "request": "launch",
+      "env": {
+        "RUST_BACKTRACE": "full",
+        "RUST_LOG": "debug"
+      },
+      "cargo": {
+        "args": ["run", "--bin=d5-p1-cafeteria", "--package=d5-p1-cafeteria"]
+      },
+      "args": []
+    },
+    {
       "name": "Debug executable 'd4-p2-printing-department'",
       "type": "lldb",
       "request": "launch",

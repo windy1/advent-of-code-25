@@ -82,11 +82,15 @@ version = "0.1.0"
 [[package]]
 name = "d2-p1-gift-shop"
 version = "0.1.0"
+dependencies = [
+ "aoc25",
+]
 
 [[package]]
 name = "d2-p2-gift-shop"
 version = "0.1.0"
 dependencies = [
+ "aoc25",
  "env_logger",
  "log",
 ]
@@ -118,6 +122,15 @@ dependencies = [
 
 [[package]]
 name = "d4-p2-printing-department"
+version = "0.1.0"
+dependencies = [
+ "aoc25",
+ "env_logger",
+ "log",
+]
+
+[[package]]
+name = "d5-p1-cafeteria"
 version = "0.1.0"
 dependencies = [
  "aoc25",

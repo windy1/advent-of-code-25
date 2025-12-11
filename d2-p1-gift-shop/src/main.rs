@@ -1,14 +1,15 @@
-const INPUT: &str = include_str!("../input.txt");
-const INVALID_FORMAT: &str = "invalid format";
+use std::ops::RangeInclusive;
 
-type Range = (u64, u64);
+use aoc25::range::Range;
+
+const INPUT: &str = include_str!("../input.txt");
 
 fn main() {
-    let ranges: Vec<(u64, u64)> = INPUT.split(',').map(parse_range).collect();
+    let ranges = parse_ranges();
     let mut answer: u64 = 0;
 
     for range in ranges {
-        for id in range.0..=range.1 {
+        for id in range {
             if !is_valid_id(id) {
                 answer += id;
             }
@@ -18,11 +19,12 @@ fn main() {
     println!("Answer: {}", answer);
 }
 
-fn parse_range(value: &str) -> Range {
-    let (start, end) = value.split_once('-').expect(INVALID_FORMAT);
-    let start = start.parse::<u64>().expect(INVALID_FORMAT);
-    let end = end.parse::<u64>().expect(INVALID_FORMAT);
-    (start, end)
+fn parse_ranges() -> Vec<RangeInclusive<u64>> {
+    INPUT
+        .split(',')
+        .map(Range::from)
+        .map(RangeInclusive::from)
+        .collect()
 }
 
 fn is_valid_id(id: u64) -> bool {
