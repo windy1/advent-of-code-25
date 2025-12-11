@@ -1,4 +1,7 @@
-use std::ops;
+use std::{
+    fmt::{self, Display, Formatter},
+    ops,
+};
 
 const INVALID_FORMAT: &str = "invalid format";
 
@@ -22,5 +25,23 @@ impl From<Range> for ops::Range<u64> {
 impl From<Range> for ops::RangeInclusive<u64> {
     fn from(value: Range) -> Self {
         value.0..=value.1
+    }
+}
+
+impl From<ops::RangeInclusive<u64>> for Range {
+    fn from(value: ops::RangeInclusive<u64>) -> Self {
+        Range(*value.start(), *value.end())
+    }
+}
+
+impl From<ops::Range<u64>> for Range {
+    fn from(value: ops::Range<u64>) -> Self {
+        Range(value.start, value.end)
+    }
+}
+
+impl Display for Range {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        write!(f, "{}-{}", self.0, self.1)
     }
 }
