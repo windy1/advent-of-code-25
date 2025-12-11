@@ -5,6 +5,23 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Debug executable 'd4-p2-printing-department'",
+      "type": "lldb",
+      "request": "launch",
+      "env": {
+        "RUST_BACKTRACE": "full",
+        "RUST_LOG": "debug"
+      },
+      "cargo": {
+        "args": [
+          "run",
+          "--bin=d4-p2-printing-department",
+          "--package=d4-p2-printing-department"
+        ]
+      },
+      "args": []
+    },
+    {
       "name": "Debug executable 'd4-p1-printing-department'",
       "type": "lldb",
       "request": "launch",

@@ -117,6 +117,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "d4-p2-printing-department"
+version = "0.1.0"
+dependencies = [
+ "aoc25",
+ "env_logger",
+ "log",
+]
+
+[[package]]
 name = "env_filter"
 version = "0.1.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"

@@ -1,0 +1,9 @@
+[package]
+name = "d4-p2-printing-department"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+env_logger = "0.11.8"
+log = "0.4.29"
+aoc25 = { path = "../aoc25" }
