@@ -8,5 +8,5 @@ members = [
     "d2-p2-gift-shop",
     "d3-p1-lobby",
     "d3-p2-lobby",
-    "d4-p1-printing-department", "d4-p2-printing-department", "d5-p1-cafeteria",
+    "d4-p1-printing-department", "d4-p2-printing-department", "d5-p1-cafeteria", "d5-p2-cafeteria",
 ]
