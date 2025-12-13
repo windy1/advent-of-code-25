@@ -1,6 +1,9 @@
 use std::fmt;
 use std::fmt::{Display, Formatter};
+use std::iter::Flatten;
+use std::slice::Iter;
 
+#[derive(Debug, Clone, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub struct CharGrid {
     width: usize,
     height: usize,
@@ -44,8 +47,21 @@ impl CharGrid {
         self.data[y][x]
     }
 
+    pub fn get_row(&self, y: usize) -> &[char] {
+        &self.data[y]
+    }
+
     pub fn set(&mut self, x: usize, y: usize, value: char) {
         self.data[y][x] = value;
+    }
+
+    pub fn position_of(&self, value: char) -> Option<(usize, usize)> {
+        for (x, y) in self.coordinates_iter() {
+            if self.get(x, y) == value {
+                return Some((x, y));
+            }
+        }
+        None
     }
 
     pub fn resize(&mut self, width: usize, height: usize) {
@@ -108,7 +124,16 @@ impl CharGrid {
     }
 
     pub fn iter(&self) -> impl Iterator<Item = &char> {
-        self.data.iter().flat_map(|row| row.iter())
+        self.data.iter().flatten()
+    }
+}
+
+impl<'a> IntoIterator for &'a CharGrid {
+    type Item = &'a char;
+    type IntoIter = Flatten<Iter<'a, Vec<char>>>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.data.iter().flatten()
     }
 }
 
@@ -148,20 +173,6 @@ impl Iterator for Columns<'_> {
 impl Default for CharGrid {
     fn default() -> Self {
         Self::new(0, 0)
-    }
-}
-
-impl Clone for CharGrid {
-    fn clone(&self) -> Self {
-        let mut new_grid = CharGrid::new(self.width(), self.height());
-
-        for y in 0..self.height() {
-            for x in 0..self.width() {
-                new_grid.set(x, y, self.get(x, y));
-            }
-        }
-
-        new_grid
     }
 }
 
@@ -381,5 +392,29 @@ JKL"
         let actual: Vec<Vec<char>> = grid.columns_iter().collect();
 
         assert_eq!(expected, actual);
+    }
+
+    #[test]
+    fn position_of() {
+        let grid: CharGrid = "ABC
+DEF
+GHI
+JKL"
+        .into();
+
+        let actual = grid.position_of('H');
+        assert_eq!(actual, Some((1, 2)));
+    }
+
+    #[test]
+    fn position_of_not_found() {
+        let grid: CharGrid = "ABC
+DEF
+GHI
+JKL"
+        .into();
+
+        let actual = grid.position_of('M');
+        assert!(actual.is_none());
     }
 }
