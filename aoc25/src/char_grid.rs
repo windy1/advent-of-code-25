@@ -48,6 +48,35 @@ impl CharGrid {
         self.data[y][x] = value;
     }
 
+    pub fn resize(&mut self, width: usize, height: usize) {
+        if width == self.width && height == self.height {
+            return;
+        }
+
+        if height != self.height {
+            self.data.resize(height, vec![Self::DEFAULT_CHAR; width]);
+        }
+
+        if width != self.width {
+            for row in &mut self.data {
+                row.resize(width, Self::DEFAULT_CHAR);
+            }
+        }
+
+        self.width = width;
+        self.height = height;
+    }
+
+    pub fn push_x(&mut self, y: usize, value: char) {
+        self.resize(self.width + 1, self.height);
+        self.set(self.width - 1, y, value);
+    }
+
+    pub fn push_y(&mut self, x: usize, value: char) {
+        self.resize(self.width, self.height + 1);
+        self.set(x, self.height - 1, value);
+    }
+
     pub fn coordinates_iter(&self) -> impl CoordIter {
         (0..self.height()).flat_map(move |y| (0..self.width()).map(move |x| (x, y)))
     }
@@ -70,8 +99,55 @@ impl CharGrid {
             .map(|(nx, ny)| (nx as usize, ny as usize))
     }
 
+    pub fn rows_iter(&self) -> impl Iterator<Item = &Vec<char>> {
+        self.data.iter()
+    }
+
+    pub fn columns_iter(&self) -> impl Iterator<Item = Vec<char>> {
+        Columns::new(self)
+    }
+
     pub fn iter(&self) -> impl Iterator<Item = &char> {
         self.data.iter().flat_map(|row| row.iter())
+    }
+}
+
+struct Columns<'a> {
+    grid: &'a CharGrid,
+    x: usize,
+}
+
+impl<'a> Columns<'a> {
+    pub fn new(grid: &'a CharGrid) -> Self {
+        Columns { grid, x: 0 }
+    }
+}
+
+impl Iterator for Columns<'_> {
+    type Item = Vec<char>;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        let grid = &self.grid;
+        let x = self.x;
+
+        if x > grid.width() - 1 {
+            return None;
+        }
+
+        let mut column: Vec<char> = vec![CharGrid::DEFAULT_CHAR; grid.height];
+
+        for (y, value) in column.iter_mut().enumerate() {
+            *value = grid.get(x, y);
+        }
+
+        self.x += 1;
+        Some(column)
+    }
+}
+
+impl Default for CharGrid {
+    fn default() -> Self {
+        Self::new(0, 0)
     }
 }
 
@@ -214,5 +290,96 @@ AAA";
         assert_eq!(grid.width(), 3);
         assert_eq!(grid.height(), 4);
         assert_eq!(grid.get(1, 1), 'B');
+    }
+
+    #[test]
+    fn resize_expand_width() {
+        let mut grid = CharGrid::new(5, 5);
+
+        assert!(!grid.contains(5, 0));
+
+        grid.resize(6, 5);
+
+        assert!(grid.contains(5, 0));
+        assert_eq!(grid.width(), 6);
+        assert_eq!(grid.height(), 5);
+    }
+
+    #[test]
+    fn resize_shrink_width() {
+        let mut grid = CharGrid::new(5, 5);
+
+        assert!(grid.contains(4, 0));
+
+        grid.resize(4, 5);
+
+        assert!(!grid.contains(4, 0));
+        assert_eq!(grid.width(), 4);
+        assert_eq!(grid.height(), 5);
+    }
+
+    #[test]
+    fn resize_expand_height() {
+        let mut grid = CharGrid::new(5, 5);
+
+        assert!(!grid.contains(0, 5));
+
+        grid.resize(5, 6);
+
+        assert!(grid.contains(0, 5));
+        assert_eq!(grid.width(), 5);
+        assert_eq!(grid.height(), 6);
+    }
+
+    #[test]
+    fn resize_shrink_height() {
+        let mut grid = CharGrid::new(5, 5);
+
+        assert!(grid.contains(0, 4));
+
+        grid.resize(5, 4);
+
+        assert!(!grid.contains(0, 4));
+        assert_eq!(grid.width(), 5);
+        assert_eq!(grid.height(), 4);
+    }
+
+    #[test]
+    fn push_x() {
+        let mut grid = CharGrid::new(5, 5);
+
+        grid.push_x(0, 'A');
+
+        assert_eq!(grid.get(5, 0), 'A');
+        assert_eq!(grid.get(5, 1), '?');
+    }
+
+    #[test]
+    fn push_y() {
+        let mut grid = CharGrid::new(5, 5);
+
+        grid.push_y(0, 'A');
+
+        assert_eq!(grid.get(0, 5), 'A');
+        assert_eq!(grid.get(1, 5), '?');
+    }
+
+    #[test]
+    fn columns_iter() {
+        let grid: CharGrid = "ABC
+DEF
+GHI
+JKL"
+        .into();
+
+        let expected = vec![
+            vec!['A', 'D', 'G', 'J'],
+            vec!['B', 'E', 'H', 'K'],
+            vec!['C', 'F', 'I', 'L'],
+        ];
+
+        let actual: Vec<Vec<char>> = grid.columns_iter().collect();
+
+        assert_eq!(expected, actual);
     }
 }

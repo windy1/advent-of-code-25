@@ -2,6 +2,23 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Debug executable d6-p2-trash-compactor",
+      "type": "lldb",
+      "request": "launch",
+      "env": {
+        "RUST_BACKTRACE": "full",
+        "RUST_LOG": "debug"
+      },
+      "cargo": {
+        "args": [
+          "run",
+          "--bin=d6-p2-trash-compactor",
+          "--package=d6-p2-trash-compactor"
+        ]
+      },
+      "args": []
+    },
+    {
       "name": "Debug executable d6-p1-trash-compactor",
       "type": "lldb",
       "request": "launch",
