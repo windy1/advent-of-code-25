@@ -11,7 +11,10 @@ cargo new "$1"
 cargo add --package "$1" log env_logger
 
 cat > ./"$1"/src/main.rs << 'EOF'
+#[cfg(debug_assertions)]
 const INPUT: &str = include_str!("../input_example.txt");
+#[cfg(not(debug_assertions))]
+const INPUT: &str = include_str!("../input.txt");
 
 fn main() {
     env_logger::builder().format_timestamp(None).init();
