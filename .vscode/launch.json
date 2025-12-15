@@ -2,6 +2,23 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Debug executable d7-p2-laboratories",
+      "type": "lldb",
+      "request": "launch",
+      "env": {
+        "RUST_BACKTRACE": "full",
+        "RUST_LOG": "debug"
+      },
+      "cargo": {
+        "args": [
+          "run",
+          "--bin=d7-p2-laboratories",
+          "--package=d7-p2-laboratories"
+        ]
+      },
+      "args": []
+    },
+    {
       "name": "Debug executable d7-p1-laboratories",
       "type": "lldb",
       "request": "launch",

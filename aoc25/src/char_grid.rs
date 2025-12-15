@@ -8,6 +8,8 @@ pub struct CharGrid {
     width: usize,
     height: usize,
     data: Vec<Vec<char>>,
+    axes_enabled: bool,
+    cell_width: usize,
 }
 
 pub trait CoordIter = Iterator<Item = (usize, usize)>;
@@ -24,6 +26,8 @@ impl CharGrid {
             width,
             height,
             data: vec![vec![default_char; width]; height],
+            axes_enabled: false,
+            cell_width: 3,
         }
     }
 
@@ -81,6 +85,19 @@ impl CharGrid {
 
         self.width = width;
         self.height = height;
+    }
+
+    pub fn toggle_axes(mut self) -> Self {
+        self.axes_enabled = !self.axes_enabled;
+        self
+    }
+
+    pub fn cell_width(&self) -> usize {
+        self.cell_width
+    }
+
+    pub fn cell_width_mut(&mut self) -> &mut usize {
+        &mut self.cell_width
     }
 
     pub fn push_x(&mut self, y: usize, value: char) {
@@ -178,9 +195,23 @@ impl Default for CharGrid {
 
 impl Display for CharGrid {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        for row in &self.data {
+        let cell_width = self.cell_width;
+
+        if self.axes_enabled {
+            write!(f, "{:>3}", " ")?;
+            for x in 0..self.width() {
+                write!(f, "{:>cell_width$}", x.to_string())?;
+            }
+            writeln!(f)?;
+        }
+
+        for (y, row) in self.data.iter().enumerate() {
+            if self.axes_enabled {
+                write!(f, "{:>cell_width$}", y.to_string())?;
+            }
+
             for c in row {
-                write!(f, "{:>2}", c)?;
+                write!(f, "{:>cell_width$}", c)?;
             }
             writeln!(f)?;
         }
