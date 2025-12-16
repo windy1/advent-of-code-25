@@ -1,6 +1,6 @@
 use std::{thread, time::Duration};
 
-use aoc25::char_grid::CharGrid;
+use aoc25::{char_grid::CharGrid, io};
 
 const INPUT: &str = include_str!("../input.txt");
 const START: char = 'S';
@@ -94,7 +94,7 @@ impl TachyonManifold {
     }
 
     pub fn print(&self) {
-        clear_screen();
+        io::clear_screen();
         println!("{}", self.grid);
     }
 }
@@ -116,8 +116,4 @@ fn main() {
     }
 
     println!("Answer: {}", manifold.num_splits);
-}
-
-fn clear_screen() {
-    print!("\x1B[3J\x1B[H\x1B[2J");
 }

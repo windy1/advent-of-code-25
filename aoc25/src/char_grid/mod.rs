@@ -3,6 +3,10 @@ use std::fmt::{Display, Formatter};
 use std::iter::Flatten;
 use std::slice::Iter;
 
+use crate::char_grid::slice::Slice;
+
+pub mod slice;
+
 #[derive(Debug, Clone, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub struct CharGrid {
     width: usize,
@@ -89,6 +93,7 @@ impl CharGrid {
 
     pub fn toggle_axes(mut self) -> Self {
         self.axes_enabled = !self.axes_enabled;
+        self.cell_width = 3;
         self
     }
 
@@ -142,6 +147,10 @@ impl CharGrid {
 
     pub fn iter(&self) -> impl Iterator<Item = &char> {
         self.data.iter().flatten()
+    }
+
+    pub fn slice(&self, x: usize, y: usize, width: usize, height: usize) -> Slice<'_> {
+        Slice::new(self, x, y, width, height)
     }
 }
 
@@ -198,7 +207,7 @@ impl Display for CharGrid {
         let cell_width = self.cell_width;
 
         if self.axes_enabled {
-            write!(f, "{:>3}", " ")?;
+            write!(f, "{:>cell_width$}", " ")?;
             for x in 0..self.width() {
                 write!(f, "{:>cell_width$}", x.to_string())?;
             }
@@ -215,6 +224,7 @@ impl Display for CharGrid {
             }
             writeln!(f)?;
         }
+
         Ok(())
     }
 }

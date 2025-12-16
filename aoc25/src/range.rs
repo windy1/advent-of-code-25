@@ -45,3 +45,11 @@ impl Display for Range {
         write!(f, "{}-{}", self.0, self.1)
     }
 }
+
+pub fn bidirectional_range(start: i64, delta: i64) -> Box<dyn Iterator<Item = i64>> {
+    if delta >= 0 {
+        Box::new(start..=start + delta)
+    } else {
+        Box::new((start + delta..=start).rev())
+    }
+}

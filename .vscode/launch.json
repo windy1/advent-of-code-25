@@ -2,6 +2,23 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Debug executable d9-p1-movie-theater",
+      "type": "lldb",
+      "request": "launch",
+      "env": {
+        "RUST_BACKTRACE": "full",
+        "RUST_LOG": "debug"
+      },
+      "cargo": {
+        "args": [
+          "run",
+          "--bin=d9-p1-movie-theater",
+          "--package=d9-p1-movie-theater"
+        ]
+      },
+      "args": []
+    },
+    {
       "name": "Debug executable d8-p2-playground",
       "type": "lldb",
       "request": "launch",

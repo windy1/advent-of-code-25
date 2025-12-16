@@ -1,7 +1,7 @@
 #[cfg(not(debug_assertions))]
 use std::collections::HashMap;
 
-use aoc25::char_grid::CharGrid;
+use aoc25::{char_grid::CharGrid, io};
 #[cfg(debug_assertions)]
 use indexmap::IndexMap;
 
@@ -190,7 +190,7 @@ impl TachyonManifold {
     }
 
     fn print(&self, timeline: &CharGrid) {
-        clear_screen();
+        io::clear_screen();
 
         if cfg!(debug_assertions) {
             println!("{}", self.grid);
@@ -216,8 +216,4 @@ fn main() {
     let mut manifold: TachyonManifold = INPUT.into();
     manifold.run();
     println!("Timelines: {}", manifold.total_timelines);
-}
-
-fn clear_screen() {
-    print!("\x1B[3J\x1B[H\x1B[2J");
 }

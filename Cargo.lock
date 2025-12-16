@@ -272,6 +272,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "d9-p1-movie-theater"
+version = "0.1.0"
+dependencies = [
+ "aoc25",
+ "env_logger",
+ "log",
+]
+
+[[package]]
 name = "either"
 version = "1.15.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
