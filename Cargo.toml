@@ -8,5 +8,5 @@ members = [
     "d2-p2-gift-shop",
     "d3-p1-lobby",
     "d3-p2-lobby",
-    "d4-p1-printing-department", "d4-p2-printing-department", "d5-p1-cafeteria", "d5-p2-cafeteria", "d6-p1-trash-compactor", "d6-p2-trash-compactor", "d7-p1-laboratories", "d7-p2-laboratories", "d8-p1-playground",
+    "d4-p1-printing-department", "d4-p2-printing-department", "d5-p1-cafeteria", "d5-p2-cafeteria", "d6-p1-trash-compactor", "d6-p2-trash-compactor", "d7-p1-laboratories", "d7-p2-laboratories", "d8-p1-playground", "d8-p2-playground",
 ]
