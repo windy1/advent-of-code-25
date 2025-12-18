@@ -2,6 +2,19 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Debug executable d10-p1-factory",
+      "type": "lldb",
+      "request": "launch",
+      "env": {
+        "RUST_BACKTRACE": "full",
+        "RUST_LOG": "debug"
+      },
+      "cargo": {
+        "args": ["run", "--bin=d10-p1-factory", "--package=d10-p1-factory"]
+      },
+      "args": []
+    },
+    {
       "name": "Debug executable d9-p2-movie-theater",
       "type": "lldb",
       "request": "launch",

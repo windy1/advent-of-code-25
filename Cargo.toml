@@ -3,7 +3,7 @@ resolver = "3"
 members = [
     "aoc25",
     "d1-p1-secret-entrance",
-    "d1-p2-secret-entrance",
+    "d1-p2-secret-entrance", "d10-p1-factory",
     "d2-p1-gift-shop",
     "d2-p2-gift-shop",
     "d3-p1-lobby",
