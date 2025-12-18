@@ -149,6 +149,7 @@ name = "d10-p1-factory"
 version = "0.1.0"
 dependencies = [
  "env_logger",
+ "itertools",
  "log",
 ]
 

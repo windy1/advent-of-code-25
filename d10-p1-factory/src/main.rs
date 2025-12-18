@@ -1,5 +1,7 @@
 use std::fmt::{self, Display, Formatter};
 
+use itertools::Itertools;
+
 #[cfg(debug_assertions)]
 const INPUT: &str = include_str!("../input_example.txt");
 #[cfg(not(debug_assertions))]
@@ -15,11 +17,59 @@ const JOLTAGES_END: char = '}';
 
 #[derive(Debug, Default, Clone, Eq, PartialEq, Ord, PartialOrd, Hash)]
 struct Machine {
-    indicator_lights: IndicatorLights,
     desired_state: IndicatorLights,
     buttons: Vec<Button>,
     joltages: Joltages,
 }
+
+impl Machine {
+    pub fn find_min_button_sequence_len(&self) -> usize {
+        let mut n = 1;
+
+        loop {
+            let sequences = (0..n).map(|_| &self.buttons).multi_cartesian_product();
+
+            for (sequence_num, sequence) in sequences.enumerate() {
+                let mut state = IndicatorLights(vec![false; self.desired_state.0.len()]);
+                let mut pressed: Vec<&Button> = vec![];
+
+                for button in sequence {
+                    debug_sequence(sequence_num, &state, &pressed);
+
+                    // Press button
+                    for wire in &button.0 {
+                        state.0[*wire as usize] = !state.0[*wire as usize];
+                    }
+
+                    pressed.push(button);
+                }
+
+                debug_sequence(sequence_num, &state, &pressed);
+
+                if cfg!(debug_assertions) {
+                    println!();
+                }
+
+                if state.0 == self.desired_state.0 {
+                    return pressed.len();
+                }
+            }
+
+            n += 1;
+        }
+    }
+}
+
+#[cfg(debug_assertions)]
+fn debug_sequence(sequence_num: usize, state: &IndicatorLights, pressed: &Vec<&Button>) {
+    print!("\r[{}]: {}", sequence_num, state);
+    for b in pressed {
+        print!(" {}", b);
+    }
+}
+
+#[cfg(not(debug_assertions))]
+fn debug_sequence(_sequence_num: usize, _state: &IndicatorLights, _pressed: &Vec<&Button>) {}
 
 impl From<&str> for Machine {
     fn from(value: &str) -> Self {
@@ -48,7 +98,6 @@ impl From<&str> for Machine {
         let joltages = joltages.expect("joltages not found");
 
         Self {
-            indicator_lights: IndicatorLights(vec![false; desired_state.0.len()]),
             desired_state,
             buttons,
             joltages,
@@ -61,12 +110,6 @@ fn parse_input_part<'a>(part: &'a str, end: &char, kind: &str) -> &'a str {
         .find(*end)
         .unwrap_or_else(|| panic!("missing closing bracket for {}", kind));
     &part[1..end_pos]
-}
-
-impl Display for Machine {
-    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        write!(f, "{}", self.indicator_lights)
-    }
 }
 
 #[derive(Debug, Default, Clone, Eq, PartialEq, Ord, PartialOrd, Hash)]
@@ -99,6 +142,12 @@ impl From<&str> for Button {
     }
 }
 
+impl Display for Button {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        write!(f, "({})", self.0.iter().join(", "))
+    }
+}
+
 #[derive(Debug, Default, Clone, Eq, PartialEq, Ord, PartialOrd, Hash)]
 struct Joltages(Vec<u32>);
 
@@ -119,10 +168,15 @@ fn main() {
     env_logger::builder().format_timestamp(None).init();
 
     let machines: Vec<_> = INPUT.lines().map(Machine::from).collect();
+    let num_machines = machines.len();
+    let mut answer = 0;
 
-    println!("{:?}", machines);
-
-    for machine in machines {
-        println!("{}", machine);
+    for (i, machine) in machines.iter().enumerate() {
+        let progress = i as f64 / num_machines as f64 * 100.0;
+        print!("\rProgress: {:.2}% ({}/{})", progress, i, num_machines);
+        answer += machine.find_min_button_sequence_len();
     }
+
+    println!();
+    println!("Answer: {}", answer);
 }
