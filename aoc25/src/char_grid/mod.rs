@@ -1,7 +1,7 @@
-use std::fmt;
 use std::fmt::{Display, Formatter};
 use std::iter::Flatten;
-use std::slice::Iter;
+use std::slice::{Iter, IterMut};
+use std::{fmt, iter, mem};
 
 use crate::char_grid::slice::Slice;
 
@@ -47,8 +47,8 @@ impl CharGrid {
         self.width * self.height
     }
 
-    pub fn contains(&self, x: i32, y: i32) -> bool {
-        x >= 0 && x < self.width as i32 && y >= 0 && y < self.height as i32
+    pub fn contains(&self, x: i64, y: i64) -> bool {
+        x >= 0 && x < self.width as i64 && y >= 0 && y < self.height as i64
     }
 
     pub fn get(&self, x: usize, y: usize) -> char {
@@ -127,9 +127,9 @@ impl CharGrid {
         self.deltas_iter(x, y, &[(-1, -1), (1, -1), (1, 1), (-1, 1)])
     }
 
-    fn deltas_iter(&self, x: usize, y: usize, deltas: &[(i32, i32)]) -> impl CoordIter {
-        let x = x as i32;
-        let y = y as i32;
+    fn deltas_iter(&self, x: usize, y: usize, deltas: &[(i64, i64)]) -> impl CoordIter {
+        let x = x as i64;
+        let y = y as i64;
         deltas
             .iter()
             .map(move |(dx, dy)| (x + dx, y + dy))
@@ -137,8 +137,34 @@ impl CharGrid {
             .map(|(nx, ny)| (nx as usize, ny as usize))
     }
 
+    pub fn raycast_iter(
+        &self,
+        x: usize,
+        y: usize,
+        dx: i64,
+        dy: i64,
+        stop_at: &[char],
+    ) -> impl CoordIter {
+        iter::from_coroutine(
+            #[coroutine]
+            move || {
+                let (mut x, mut y) = (x as i64, y as i64);
+
+                while self.contains(x, y) && !stop_at.contains(&self.get(x as usize, y as usize)) {
+                    yield (x as usize, y as usize);
+                    x += dx;
+                    y += dy;
+                }
+            },
+        )
+    }
+
     pub fn rows_iter(&self) -> impl Iterator<Item = &Vec<char>> {
         self.data.iter()
+    }
+
+    pub fn rows_iter_mut(&mut self) -> IterMut<'_, Vec<char>> {
+        self.data.iter_mut()
     }
 
     pub fn columns_iter(&self) -> impl Iterator<Item = Vec<char>> {
@@ -151,6 +177,20 @@ impl CharGrid {
 
     pub fn slice(&self, x: usize, y: usize, width: usize, height: usize) -> Slice<'_> {
         Slice::new(self, x, y, width, height)
+    }
+
+    pub fn to_raw(&self) -> String {
+        self.rows_iter()
+            .map(|row| row.iter().collect::<String>())
+            .collect::<Vec<_>>()
+            .join("\n")
+    }
+
+    pub fn mem_size(&self) -> usize {
+        let struct_size = mem::size_of::<Self>();
+        let outer_heap = self.data.capacity() * mem::size_of::<Vec<char>>();
+        let inner_heap = self.size() * mem::size_of::<char>();
+        struct_size + outer_heap + inner_heap
     }
 }
 

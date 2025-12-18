@@ -1,0 +1,12 @@
+[package]
+name = "d9-p2-movie-theater"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+env_logger = "0.11.8"
+log = "0.4.29"
+aoc25 = { path = "../aoc25" }
+derive-new = "0.7.0"
+clap = { version = "4.5.53", features = ["derive"] }
+indexmap = "2.12.1"

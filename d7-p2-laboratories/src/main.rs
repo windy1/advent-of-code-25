@@ -92,10 +92,10 @@ impl TachyonManifold {
             return;
         }
 
-        let lx: i32 = x as i32 - 1;
-        let rx: i32 = x as i32 + 1;
+        let lx: i64 = x as i64 - 1;
+        let rx: i64 = x as i64 + 1;
 
-        if timeline.contains(lx, y as i32) && timeline.get(lx as usize, y) != SPLITTER {
+        if timeline.contains(lx, y as i64) && timeline.get(lx as usize, y) != SPLITTER {
             // Split left
             let mut ly = y;
             Self::cast_beam(&mut timeline, lx as usize, &mut ly);
@@ -104,7 +104,7 @@ impl TachyonManifold {
             self.splitter_y = y;
         }
 
-        if timeline.contains(rx, y as i32) && timeline.get(rx as usize, y) != SPLITTER {
+        if timeline.contains(rx, y as i64) && timeline.get(rx as usize, y) != SPLITTER {
             // Split right
             let mut ry = y;
             Self::cast_beam(&mut timeline, rx as usize, &mut ry);
@@ -130,8 +130,12 @@ impl TachyonManifold {
     }
 
     fn cast_beam(timeline: &mut CharGrid, x: usize, y: &mut usize) {
-        while timeline.contains(x as i32, *y as i32) && timeline.get(x, *y) != SPLITTER {
-            timeline.set(x, *y, BEAM);
+        let beam = timeline
+            .raycast_iter(x, *y, 0, 1, &[SPLITTER])
+            .collect::<Vec<(usize, usize)>>();
+
+        for (cx, cy) in beam {
+            timeline.set(cx, cy, BEAM);
             *y += 1;
         }
     }
@@ -144,12 +148,12 @@ impl TachyonManifold {
             return;
         }
 
-        let lx: i32 = sx as i32 - 1;
-        let rx: i32 = sx as i32 + 1;
+        let lx: i64 = sx as i64 - 1;
+        let rx: i64 = sx as i64 + 1;
 
-        let beam_explored = timeline.contains(lx, sy as i32)
+        let beam_explored = timeline.contains(lx, sy as i64)
             && timeline.get(lx as usize, sy) == BEAM
-            && timeline.contains(rx, sy as i32)
+            && timeline.contains(rx, sy as i64)
             && timeline.get(rx as usize, sy) == BEAM;
 
         if !beam_explored {

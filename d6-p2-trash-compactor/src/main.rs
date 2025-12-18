@@ -94,8 +94,8 @@ fn parse_operand_grids(problems: &[Problem], lines: &[&str]) -> Vec<CharGrid> {
                     }
 
                     if y > 0 {
-                        for dy in (-(y as i32)..=-1).rev() {
-                            if !is_cell_empty(operand_lines, global_x, (y as i32 + dy) as usize) {
+                        for dy in (-(y as i64)..=-1).rev() {
+                            if !is_cell_empty(operand_lines, global_x, (y as i64 + dy) as usize) {
                                 has_cell_above = true;
                             }
                         }
@@ -106,7 +106,7 @@ fn parse_operand_grids(problems: &[Problem], lines: &[&str]) -> Vec<CharGrid> {
                     }
                 }
 
-                if grid.contains(x as i32, y as i32) {
+                if grid.contains(x as i64, y as i64) {
                     grid.set(x, y, ch);
                     continue;
                 }

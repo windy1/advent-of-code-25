@@ -45,6 +45,8 @@ impl Display for Slice<'_> {
             for x in self.x..self.x + self.width {
                 write!(f, "{:>cell_width$}", grid.get(x, y))?;
             }
+
+            writeln!(f)?;
         }
 
         Ok(())

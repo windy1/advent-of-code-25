@@ -84,7 +84,7 @@ impl TachyonManifold {
     ) -> Vec<(usize, usize)> {
         let mut positions: Vec<(usize, usize)> = vec![];
 
-        while grid.contains(x as i32, y as i32) && grid.get(x, y) != SPLITTER {
+        while grid.contains(x as i64, y as i64) && grid.get(x, y) != SPLITTER {
             *did_split = true;
             positions.push((x, y));
             y += 1;
