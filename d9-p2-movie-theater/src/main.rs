@@ -219,6 +219,7 @@ impl MovieTheater {
 
         debug_grid(grid);
 
+        // Find starting position
         for (x, y) in grid.coordinates_iter() {
             let current = grid.get(x, y);
 
@@ -531,7 +532,7 @@ impl MovieTheater {
                 }
             }
 
-            if finished || current == TILE_OTHER {
+            if finished {
                 break;
             }
 
@@ -544,29 +545,6 @@ impl MovieTheater {
             }
 
             rewind(&mut current, &mut x, &mut y);
-
-            // let mut below = grid.get(x, y + 1);
-
-            // while below != TILE_OTHER {
-            //     x += 1;
-            //     current = grid.get(x, y);
-            //     below = grid.get(x, y + 1);
-            // }
-
-            // if current == TILE_OTHER {
-            //     break;
-            // }
-
-            // y += 1;
-
-            // let left = grid.get(x - 1, y);
-
-            // if left != TILE_OTHER {
-            //     continue;
-            // }
-
-            // // We need to rewind left on the new row too
-            // rewind_left(&mut current, &mut x, &mut y);
         }
 
         io::show_cursor();
@@ -611,11 +589,24 @@ impl MovieTheater {
         let dx = x2 - x1;
         let dy = y2 - y1;
 
+        // Check each edge
         for x in bidirectional_range(x1, dx) {
-            for y in bidirectional_range(y1, dy) {
-                if self.initial().get(x as usize, y as usize) == TILE_OTHER {
-                    return false;
-                }
+            if self.initial().get(x as usize, y1 as usize) == TILE_OTHER {
+                return false;
+            }
+
+            if self.initial().get(x as usize, y2 as usize) == TILE_OTHER {
+                return false;
+            }
+        }
+
+        for y in bidirectional_range(y1, dy) {
+            if self.initial().get(x1 as usize, y as usize) == TILE_OTHER {
+                return false;
+            }
+
+            if self.initial().get(x2 as usize, y as usize) == TILE_OTHER {
+                return false;
             }
         }
 
@@ -680,10 +671,6 @@ impl Display for Rect {
 fn main() {
     env_logger::builder().format_timestamp(None).init();
 
-    // too high: 4594510710
-    // too high: 4594510709
-    // too low: 93009
-
     println!("Loading...");
 
     let args = Args::parse();
@@ -713,6 +700,7 @@ fn main() {
 
         for (j, (corner_x, corner_y)) in corners {
             if i <= j {
+                // Only check each pair once
                 continue;
             }
 
